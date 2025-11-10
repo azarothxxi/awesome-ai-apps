@@ -1,0 +1,89 @@
+[
+  {
+    "name": "Flag Minor Incident Count",
+    "description": "Increment incident counter for minor violations",
+    "action_type": "flag_count",
+    "config": {
+      "counter_name": "minor_violations",
+      "increment_by": 1,
+      "storage": "redis"
+    },
+    "enabled": true,
+    "tags": ["counting", "monitoring"]
+  },
+  {
+    "name": "Flag Major Incident Count",
+    "description": "Increment incident counter for major violations",
+    "action_type": "flag_count",
+    "config": {
+      "counter_name": "major_violations",
+      "increment_by": 1,
+      "storage": "redis"
+    },
+    "enabled": true,
+    "tags": ["counting", "monitoring"]
+  },
+  {
+    "name": "Send Email Alert to Operations",
+    "description": "Send email alert to operations team for SLA violations",
+    "action_type": "email",
+    "config": {
+      "recipients": ["ops@company.com", "sla-alerts@company.com"],
+      "subject_template": "SLA Violation: {rule_name}",
+      "body_template": "Service: {service_type}\\nRule: {rule_name}\\nSeverity: {severity}\\nTime: {timestamp}\\n\\nDetails: {violation_reasons}"
+    },
+    "enabled": true,
+    "retry_on_failure": true,
+    "max_retries": 3,
+    "tags": ["email", "notification"]
+  },
+  {
+    "name": "Create JIRA Incident Ticket",
+    "description": "Automatically create incident ticket in JIRA for major violations",
+    "action_type": "create_incident",
+    "config": {
+      "incident_system": "jira",
+      "project_key": "SLA",
+      "issue_type": "Bug",
+      "priority": "High",
+      "title_template": "[SLA Violation] {rule_name}",
+      "description_template": "**Service:** {service_type}\\n**Rule:** {rule_name}\\n**Severity:** {severity}\\n**Timestamp:** {timestamp}\\n\\n**Violation Details:**\\n{violation_reasons}\\n\\n**Metrics:**\\n```json\\n{metrics}\\n```",
+      "labels": ["sla", "auto-generated", "cx-monitoring"]
+    },
+    "enabled": true,
+    "retry_on_failure": true,
+    "max_retries": 2,
+    "tags": ["incident", "jira", "ticketing"]
+  },
+  {
+    "name": "Log to Violations File",
+    "description": "Log all violations to violations.log file",
+    "action_type": "log",
+    "config": {
+      "log_level": "warning",
+      "log_destination": "file",
+      "file_path": "/var/log/cx-monitoring/violations.log",
+      "log_format": "json"
+    },
+    "enabled": true,
+    "tags": ["logging", "audit"]
+  },
+  {
+    "name": "Increment Prometheus Violations Counter",
+    "description": "Record violation metric in Prometheus",
+    "action_type": "metric",
+    "config": {
+      "metric_name": "sla_violations_total",
+      "metric_type": "counter",
+      "metric_value": 1,
+      "destination": "prometheus",
+      "labels": {
+        "severity": "{severity}",
+        "service_type": "{service_type}",
+        "rule_name": "{rule_name}"
+      }
+    },
+    "enabled": true,
+    "tags": ["metrics", "prometheus", "monitoring"]
+  }
+]

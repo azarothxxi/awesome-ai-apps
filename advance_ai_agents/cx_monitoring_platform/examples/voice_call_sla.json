@@ -1,0 +1,76 @@
+{
+  "name": "Premium Voice Service SLA",
+  "description": "SLA for premium voice call services with strict quality guarantees",
+  "version": "1.0.0",
+  "service_type": "voice_call_intra_network",
+  "enabled": true,
+  "rules": [
+    {
+      "name": "Intra-Network Call Connection Time",
+      "description": "No more than 3 seconds to connect and ring destination number from same network",
+      "service_type": "voice_call_intra_network",
+      "service_subtype": "intra_network",
+      "conditions": [
+        {
+          "metric_type": "connection_time",
+          "operator": "<=",
+          "threshold": 3,
+          "description": "Connection time must be 3 seconds or less"
+        }
+      ],
+      "condition_logic": "AND",
+      "severity": "minor",
+      "enabled": true,
+      "priority": 80,
+      "tags": ["voice", "connection", "quality"]
+    },
+    {
+      "name": "Daily Dropped Calls Limit (Good Signal)",
+      "description": "No more than 3 network caused dropped calls per day on 4 bar signal strength and up",
+      "service_type": "voice_call_intra_network",
+      "conditions": [
+        {
+          "metric_type": "dropped_count",
+          "operator": "<=",
+          "threshold": 3,
+          "time_window": {
+            "duration": 1,
+            "unit": "days"
+          },
+          "additional_filters": {
+            "signal_strength": 4
+          },
+          "description": "Maximum 3 dropped calls per day with strong signal (4+ bars)"
+        }
+      ],
+      "condition_logic": "AND",
+      "severity": "major",
+      "enabled": true,
+      "priority": 90,
+      "tags": ["voice", "dropped_calls", "reliability"]
+    },
+    {
+      "name": "Call Connection Success Rate",
+      "description": "No more than 1 failed call connect attempt for every 10 outgoing call attempts",
+      "service_type": "voice_call_intra_network",
+      "conditions": [
+        {
+          "metric_type": "failure_rate",
+          "operator": "<=",
+          "threshold": 0.1,
+          "time_window": {
+            "duration": 1,
+            "unit": "hours"
+          },
+          "description": "Failure rate must be 10% or less (1 in 10 calls)"
+        }
+      ],
+      "condition_logic": "AND",
+      "severity": "major",
+      "enabled": true,
+      "priority": 95,
+      "tags": ["voice", "success_rate", "reliability"]
+    }
+  ],
+  "tags": ["premium", "voice", "telecom"]
+}

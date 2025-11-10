@@ -1,0 +1,48 @@
+{
+  "compliant_metrics": {
+    "description": "Metrics that comply with all SLA rules",
+    "metrics": {
+      "connection_time": 2.5,
+      "signal_strength": 4,
+      "dropped_count": 2,
+      "failure_rate": 0.08,
+      "error_count": 1
+    }
+  },
+  "violation_connection_time": {
+    "description": "Connection time exceeds 3 seconds threshold",
+    "metrics": {
+      "connection_time": 4.2,
+      "signal_strength": 4,
+      "dropped_count": 1,
+      "failure_rate": 0.05
+    }
+  },
+  "violation_dropped_calls": {
+    "description": "Too many dropped calls with strong signal",
+    "metrics": {
+      "connection_time": 2.1,
+      "signal_strength": 4,
+      "dropped_count": 5,
+      "failure_rate": 0.06
+    }
+  },
+  "violation_failure_rate": {
+    "description": "Call failure rate exceeds 10%",
+    "metrics": {
+      "connection_time": 2.8,
+      "signal_strength": 5,
+      "dropped_count": 2,
+      "failure_rate": 0.15
+    }
+  },
+  "multiple_violations": {
+    "description": "Multiple SLA rules violated simultaneously",
+    "metrics": {
+      "connection_time": 5.5,
+      "signal_strength": 4,
+      "dropped_count": 6,
+      "failure_rate": 0.22
+    }
+  }
+}
